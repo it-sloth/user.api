@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"it-sloth/user.api/config"
 	"it-sloth/user.api/internal/handler"
@@ -20,11 +21,11 @@ func main() {
 	}
 }
 
-func initRoutes() *http.ServeMux {
+func initRoutes() *mux.Router {
 	publicHandler := handler.NewPublic()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/user", publicHandler.GetUser)
+	router := mux.NewRouter()
+	router.HandleFunc("/user/{name:[a-z]+}", publicHandler.GetUser).Methods("GET")
 
-	return mux
+	return router
 }

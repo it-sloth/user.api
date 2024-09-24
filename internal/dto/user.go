@@ -1,13 +1,10 @@
 package dto
 
-import "time"
-
-type User struct {
-	Nickname    string    `json:"name"`
-	MemberSince time.Time `json:"member_since"`
-}
+import (
+	"it-sloth/user.api/internal/entity"
+)
 
 type UserResponse struct {
-	Users   []User `json:"users"`
-	Version string `json:"version"`
+	User    entity.User `json:"user"`
+	Version string      `json:"version"`
 }

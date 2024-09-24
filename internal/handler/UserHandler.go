@@ -2,17 +2,26 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
+	"it-sloth/user.api/config"
 	"it-sloth/user.api/internal/dto"
+	"it-sloth/user.api/internal/repository"
 	"net/http"
-	"time"
 )
 
 type UserHandler struct {
+	userRepository *repository.User
 }
 
 func (h UserHandler) GetUser(rw http.ResponseWriter, request *http.Request) {
+	user, err := h.userRepository.GetUser(mux.Vars(request)["name"])
+
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
 	data := dto.UserResponse{
-		Users:   h.makeUserList(),
+		User:    user,
 		Version: "0.0.0.3",
 	}
 
@@ -27,17 +36,8 @@ func (h UserHandler) GetUser(rw http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func (h UserHandler) makeUserList() []dto.User {
-	users := []dto.User{
-		{Nickname: "Admin", MemberSince: time.Now()},
-		{Nickname: "Bob", MemberSince: time.Now()},
-		{Nickname: "Alice", MemberSince: time.Now()},
-		{Nickname: "Daniel", MemberSince: time.Now()},
-	}
-
-	return users
-}
-
 func NewPublic() *UserHandler {
-	return &UserHandler{}
+	return &UserHandler{
+		userRepository: repository.NewUserRepository(config.GetEnv()),
+	}
 }
