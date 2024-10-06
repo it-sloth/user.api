@@ -12,9 +12,9 @@ import (
 
 func main() {
 	env := config.GetEnv()
-	mux := initRoutes()
+	muxHandler := initRoutes()
 
-	corsHandler := cors.Default().Handler(mux)
+	corsHandler := cors.Default().Handler(muxHandler)
 	err := http.ListenAndServe(fmt.Sprintf(":%s", env.Port), corsHandler)
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +25,7 @@ func initRoutes() *mux.Router {
 	publicHandler := handler.NewPublic()
 
 	router := mux.NewRouter()
-	router.HandleFunc("/user/{name:[a-z]+}", publicHandler.GetUser).Methods("GET")
+	router.HandleFunc("/user/{name:[A-Za-z]+}", publicHandler.GetUser).Methods("GET")
 
 	return router
 }
