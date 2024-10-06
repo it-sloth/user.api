@@ -22,10 +22,10 @@ func main() {
 }
 
 func initRoutes() *mux.Router {
-	publicHandler := handler.NewPublic()
+	publicHandler := handler.NewUser()
 
 	router := mux.NewRouter()
-	router.HandleFunc("/user/{name:[A-Za-z]+}", publicHandler.GetUser).Methods("GET")
+	router.HandleFunc("/user/{guid:[A-Za-z]+}", publicHandler.GetUser).Methods("GET")
 
 	return router
 }

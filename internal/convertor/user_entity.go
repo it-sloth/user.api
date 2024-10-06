@@ -7,7 +7,7 @@ import (
 
 type UserEntity struct{}
 
-func (t *UserEntity) EntityToGetRequest(user entity.User) dto.UserResponse {
+func (t *UserEntity) EntityToGetRequest(user *entity.User) dto.UserResponse {
 	return dto.UserResponse{
 		Guid:        user.Id,
 		Nickname:    user.Nick,
