@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"it-sloth/user.api/config"
-	"it-sloth/user.api/internal/dto"
+	"it-sloth/user.api/internal/convertor"
 	"it-sloth/user.api/internal/repository"
 	"net/http"
 )
 
 type UserHandler struct {
 	userRepository *repository.User
+	userConvertor  *convertor.UserEntity
 }
 
 func (h UserHandler) GetUser(rw http.ResponseWriter, request *http.Request) {
@@ -20,10 +21,7 @@ func (h UserHandler) GetUser(rw http.ResponseWriter, request *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	data := dto.UserResponse{
-		User:    user,
-		Version: "0.0.0.3",
-	}
+	data := h.userConvertor.EntityToGetRequest(user)
 
 	response, err := json.Marshal(data)
 	if err != nil {
@@ -39,5 +37,6 @@ func (h UserHandler) GetUser(rw http.ResponseWriter, request *http.Request) {
 func NewPublic() *UserHandler {
 	return &UserHandler{
 		userRepository: repository.NewUserRepository(config.GetEnv()),
+		userConvertor:  convertor.NewUserEntityConvertor(),
 	}
 }

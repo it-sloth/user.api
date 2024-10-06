@@ -13,8 +13,11 @@ type User struct {
 
 func (u User) GetUser(nickname string) (entity.User, error) {
 	var user entity.User
-	err := u.db.QueryRow("SELECT id, login, nick, password, created_at, activated_at FROM user_api.users WHERE nick = $1 LIMIT 1", nickname).
-		Scan(&user.Id, &user.Login, &user.Nick, &user.Password, &user.CreatedAt, &user.ActivatedAt)
+	user.Role = &entity.Role{}
+	err := u.db.QueryRow("SELECT U.id, U.login, U.nick, U.password, U.created_at, U.activated_at, R.id, R.name "+
+		"FROM user_api.user AS U JOIN user_api.role R ON U.role = R.id  "+
+		"WHERE nick = $1 LIMIT 1", nickname).
+		Scan(&user.Id, &user.Login, &user.Nick, &user.Password, &user.CreatedAt, &user.ActivatedAt, &user.Role.Id, &user.Role.Name)
 	if err != nil {
 		return entity.User{}, err
 	}

@@ -1,10 +1,18 @@
 package dto
 
-import (
-	"it-sloth/user.api/internal/entity"
-)
+import "time"
 
 type UserResponse struct {
-	User    entity.User `json:"user"`
-	Version string      `json:"version"`
+	Guid        string    `json:"guid"`
+	Nickname    string    `json:"nickname"`
+	Role        string    `json:"role"`
+	CreatedAt   time.Time `json:"created_at"`
+	ActivatedAt time.Time `json:"activated_at"`
+}
+
+type UserCreateRequest struct {
+	Login    string `json:"login"`
+	Nickname string `json:"nickname"`
+	Role     string `json:"role"`
+	Password string `json:"password"`
 }
