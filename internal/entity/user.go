@@ -3,11 +3,13 @@ package entity
 import "time"
 
 type User struct {
-	Id          string
+	Guid        string
 	Login       string
-	Nick        string
+	Nickname    string
 	Password    string
+	Email       string
 	Role        *Role
+	Active      bool
 	CreatedAt   time.Time
 	ActivatedAt time.Time
 }

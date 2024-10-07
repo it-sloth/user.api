@@ -9,11 +9,12 @@ type UserEntity struct{}
 
 func (t *UserEntity) EntityToGetRequest(user *entity.User) dto.UserResponse {
 	return dto.UserResponse{
-		Guid:        user.Id,
-		Nickname:    user.Nick,
+		Nickname:    user.Nickname,
 		Role:        user.Role.Name,
 		CreatedAt:   user.CreatedAt,
 		ActivatedAt: user.ActivatedAt,
+		Email:       user.Email,
+		Active:      user.Active,
 	}
 }
 

@@ -25,7 +25,7 @@ func initRoutes() *mux.Router {
 	publicHandler := handler.NewUser()
 
 	router := mux.NewRouter()
-	router.HandleFunc("/user/{guid:[A-Za-z]+}", publicHandler.GetUser).Methods("GET")
+	router.HandleFunc("/user/{guid:.*}", publicHandler.Read).Methods("GET")
 
 	return router
 }

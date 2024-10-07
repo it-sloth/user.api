@@ -3,14 +3,14 @@ package wrapper
 import (
 	"encoding/json"
 	"it-sloth/user.api/internal/dto"
-	"it-sloth/user.api/internal/internal_error"
+	"it-sloth/user.api/internal/error"
 	"net/http"
 )
 
 type ResponseWriter struct {
 }
 
-func (w *ResponseWriter) WriteError(rw http.ResponseWriter, error internal_error.InternalErrorInterface, code int) {
+func (w *ResponseWriter) WriteError(rw http.ResponseWriter, error error.InternalError, code int) {
 	errorDto, err := json.Marshal(dto.ErrorResponse{
 		Code:    error.Code(),
 		Message: error.Error(),
