@@ -10,7 +10,7 @@ import (
 type ResponseWriter struct {
 }
 
-func (w *ResponseWriter) WriteError(rw http.ResponseWriter, error error.InternalError, code int) {
+func (w *ResponseWriter) WriteError(rw http.ResponseWriter, error error.InternalError) {
 	errorDto, err := json.Marshal(dto.ErrorResponse{
 		Code:    error.Code(),
 		Message: error.Error(),
@@ -20,7 +20,7 @@ func (w *ResponseWriter) WriteError(rw http.ResponseWriter, error error.Internal
 		panic(err)
 	}
 
-	w.Write(rw, string(errorDto), code)
+	w.Write(rw, string(errorDto), error.Status())
 }
 
 func (w *ResponseWriter) Write(rw http.ResponseWriter, body string, httpCode int) {

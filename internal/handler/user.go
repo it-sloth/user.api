@@ -22,7 +22,7 @@ func (h *User) Create(rw http.ResponseWriter, r *http.Request) {
 	_, cError := h.userService.Create(dto.UserCreateRequest{})
 
 	if cError != nil && cError.Status() == http.StatusConflict {
-		h.responseWrapper.WriteError(rw, cError, cError.Status())
+		h.responseWrapper.WriteError(rw, cError)
 	}
 
 	if cError != nil {
@@ -35,7 +35,7 @@ func (h *User) Read(rw http.ResponseWriter, request *http.Request) {
 	user, cError := h.userService.Read(mux.Vars(request)["guid"])
 
 	if cError != nil && cError.Status() == http.StatusNotFound {
-		h.responseWrapper.WriteError(rw, cError, cError.Status())
+		h.responseWrapper.WriteError(rw, cError)
 		return
 	}
 
@@ -50,12 +50,11 @@ func (h *User) Read(rw http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	rw.Header().Set("Content-Type", "application/json")
 	h.responseWrapper.Write(rw, string(response), http.StatusOK)
 }
 
 func (h *User) UnknownError(rw http.ResponseWriter, code string) {
-	h.responseWrapper.WriteError(rw, error.NewInternal("unknown error occurred", code), http.StatusInternalServerError)
+	h.responseWrapper.WriteError(rw, error.Make("unknown error occurred", code, http.StatusInternalServerError))
 }
 
 func NewUser() *User {
