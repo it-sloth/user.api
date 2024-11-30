@@ -3,9 +3,10 @@ package repository
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"it-sloth/user.api/config"
 	"it-sloth/user.api/internal/entity"
+
+	_ "github.com/lib/pq"
 )
 
 type User struct {
@@ -17,15 +18,15 @@ func (u User) GetUser(guid string) (*entity.User, error) {
 	var user entity.User
 	user.Role = &entity.Role{}
 
-	err := u.db.QueryRow(`
-		SELECT U.guid, U.login, U.nickname, U.email, U.active, U.password, U.created_at,
+	err := u.db.QueryRow(
+		`SELECT U.guid, U.login, U.nickname, U.email, U.active, U.password, U.created_at,
 		       U.activated_at, R.id, R.name
 		FROM user_api.user AS U JOIN user_api.role R ON U.role = R.id
 		WHERE U.guid = $1 LIMIT 1`, guid).
 		Scan(&user.Guid, &user.Login, &user.Nickname, &user.Email, &user.Active, &user.Password,
 			&user.CreatedAt, &user.ActivatedAt, &user.Role.Id, &user.Role.Name)
 
-	if err != nil {
+	if err != nil && err == sql.ErrNoRows {
 		return nil, err
 	}
 

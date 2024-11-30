@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/rs/cors"
 	"it-sloth/user.api/config"
+	"it-sloth/user.api/internal/convertor"
 	"it-sloth/user.api/internal/handler"
+	"it-sloth/user.api/internal/repository"
+	"it-sloth/user.api/internal/service"
+	"it-sloth/user.api/internal/wrapper"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -22,7 +27,13 @@ func main() {
 }
 
 func initRoutes() *mux.Router {
-	publicHandler := handler.NewUser()
+	publicHandler := handler.NewUser(
+		service.NewUserService(
+			repository.NewUserRepository(config.GetEnv()),
+			convertor.NewUserEntityConvertor(),
+		),
+		wrapper.NewResponseWriter(),
+	)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/user/{guid:.*}", publicHandler.Read).Methods("GET")

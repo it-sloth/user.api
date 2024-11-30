@@ -2,15 +2,13 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
-	"it-sloth/user.api/config"
-	"it-sloth/user.api/internal/convertor"
 	"it-sloth/user.api/internal/dto"
 	"it-sloth/user.api/internal/error"
-	"it-sloth/user.api/internal/repository"
 	"it-sloth/user.api/internal/service"
 	"it-sloth/user.api/internal/wrapper"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type User struct {
@@ -57,11 +55,10 @@ func (h *User) UnknownError(rw http.ResponseWriter, code string) {
 	h.responseWrapper.WriteError(rw, error.Make("unknown error occurred", code, http.StatusInternalServerError))
 }
 
-func NewUser() *User {
+// NewUser initializes a new User handler with its dependencies.
+func NewUser(userService *service.User, responseWrapper *wrapper.ResponseWriter) *User {
 	return &User{
-		userService: service.NewUserService(
-			repository.NewUserRepository(config.GetEnv()),
-			convertor.NewUserEntityConvertor()),
-		responseWrapper: wrapper.NewResponseWriter(),
+		userService: userService,
+		responseWrapper: responseWrapper,
 	}
 }
