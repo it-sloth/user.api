@@ -29,3 +29,4 @@ go.work.sum
 
 # Plugin files
 *.session.sql
+*.puml

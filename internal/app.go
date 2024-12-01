@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"it-sloth/user.api/config"
 	"it-sloth/user.api/internal/controller"
+	"it-sloth/user.api/internal/factory"
 	"it-sloth/user.api/internal/repository"
 	"it-sloth/user.api/internal/service"
 	"log"
@@ -32,6 +33,7 @@ func (a *App) Build() error {
 	a.publicController = controller.NewPublicController(
 		service.NewUser(
 			repository.NewUserRepository(a.db),
+			factory.NewEntityFactory(),
 		),
 	)
 
@@ -59,6 +61,7 @@ func (a *App) Run() error {
 }
 
 func (a *App) Shutdown() error {
+	log.Fatal("shutting down")
 	a.db.Close()
 
 	return nil

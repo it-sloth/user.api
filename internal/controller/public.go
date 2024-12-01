@@ -17,12 +17,14 @@ func (c *PublicController) Create(rw http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		log.Fatal(err)
+		rw.Write([]byte(err.Error()))
 		return
 	}
 
 	response, err := c.userService.Create(dto)
 	if err != nil {
 		log.Fatal(err)
+		rw.Write([]byte(err.Error()))
 		return
 	}
 
