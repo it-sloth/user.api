@@ -3,11 +3,7 @@ package main
 import (
 	"fmt"
 	"it-sloth/user.api/config"
-	"it-sloth/user.api/internal/convertor"
-	"it-sloth/user.api/internal/handler"
-	"it-sloth/user.api/internal/repository"
-	"it-sloth/user.api/internal/service"
-	"it-sloth/user.api/internal/wrapper"
+	"it-sloth/user.api/internal/controller"
 	"log"
 	"net/http"
 
@@ -27,16 +23,11 @@ func main() {
 }
 
 func initRoutes() *mux.Router {
-	publicHandler := handler.NewUser(
-		service.NewUserService(
-			repository.NewUserRepository(config.GetEnv()),
-			convertor.NewUserEntityConvertor(),
-		),
-		wrapper.NewResponseWriter(),
-	)
+	publicController := controller.NewPublicController()
 
 	router := mux.NewRouter()
-	router.HandleFunc("/user/{guid:.*}", publicHandler.Read).Methods("GET")
+	// router.HandleFunc("/user/{guid:.*}", publicController.Read).Methods("GET")
+	router.HandleFunc("/user", publicController.Create).Methods("POST")
 
 	return router
 }
