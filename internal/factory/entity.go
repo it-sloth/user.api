@@ -10,6 +10,7 @@ type EntityFactory struct {
 }
 
 func (u *EntityFactory) EntityFromCreateDto(userDto dto.UserCreateRequest) entity.User {
+	now := time.Now()
 	return entity.User{
 		Login:    userDto.Login,
 		Nickname: userDto.Nickname,
@@ -19,8 +20,7 @@ func (u *EntityFactory) EntityFromCreateDto(userDto dto.UserCreateRequest) entit
 		Role:     entity.Role{
 			Name: entity.UserRole,
 		},
-		CreatedAt:   time.Now().Format("YYYY-MM-DD"),
-		UpdatedAt:   time.Now().Format("YYYY-MM-DD"),
+		CreatedAt:   now.Format(time.DateOnly),
 	}
 }
 

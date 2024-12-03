@@ -7,7 +7,6 @@ type User struct {
 	Role Role
 
 	CreatedAt      string
-	UpdatedAt      string
 	ActivatedAt    string
 	ActivationCode string
 
@@ -15,5 +14,5 @@ type User struct {
 	Nickname string
 	Email    string
 	Password string
-	Icon     string
+	Avatar   string
 }

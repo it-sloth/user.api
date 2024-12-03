@@ -1,40 +1,37 @@
 package controller
 
 import (
-	"encoding/json"
-	"it-sloth/user.api/internal/dto"
+	"it-sloth/user.api/internal/factory"
 	"it-sloth/user.api/internal/service"
-	"log"
+	"it-sloth/user.api/internal/wrapper"
 	"net/http"
 )
 
 type PublicController struct {
 	userService *service.User
+	dtoFactory *factory.DtoFactory
+	responseWriterWrapper *wrapper.ResponseWriter
 }
 
 func (c *PublicController) Create(rw http.ResponseWriter, r *http.Request) {
-	var dto dto.UserCreateRequest
-	err := json.NewDecoder(r.Body).Decode(&dto)
+	dto, err := c.dtoFactory.UserCreateDto(r.Body)
 	if err != nil {
-		log.Fatal(err)
-		rw.Write([]byte(err.Error()))
-		return
+		panic(err)
 	}
 
-	response, err := c.userService.Create(dto)
+	guid, err := c.userService.Create(dto)
 	if err != nil {
-		log.Fatal(err)
-		rw.Write([]byte(err.Error()))
-		return
+		panic(err)
 	}
 
-	rw.WriteHeader(http.StatusCreated)
-	rw.Header().Set("Content-Type", "application/json")
-	rw.Write([]byte(response))
+	respDto := c.dtoFactory.UserCreateResponseDto(guid)
+	c.responseWriterWrapper.WriteSuccess(rw, respDto, http.StatusCreated)
 }
 
-func NewPublicController(userService *service.User) *PublicController {
+func NewPublicController(userService *service.User, dtoFactory *factory.DtoFactory, responseWriterWrapper *wrapper.ResponseWriter) *PublicController {
 	return &PublicController{
 		userService: userService,
+		dtoFactory: dtoFactory,
+		responseWriterWrapper: responseWriterWrapper,
 	}
 }

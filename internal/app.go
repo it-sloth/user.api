@@ -8,6 +8,7 @@ import (
 	"it-sloth/user.api/internal/factory"
 	"it-sloth/user.api/internal/repository"
 	"it-sloth/user.api/internal/service"
+	"it-sloth/user.api/internal/wrapper"
 	"log"
 	"net/http"
 
@@ -35,6 +36,8 @@ func (a *App) Build() error {
 			repository.NewUserRepository(a.db),
 			factory.NewEntityFactory(),
 		),
+		factory.NewDtoFactory(),
+		wrapper.NewResponseWriter(),
 	)
 
 	muxHandler := a.buildRoutes()

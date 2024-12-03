@@ -1,8 +1,8 @@
 package entity
 
 const (
-	AdminRole string = "admin"
-	UserRole  string = "user"
+	AdminRole string = "Admin"
+	UserRole  string = "User"
 )
 
 type Role struct {

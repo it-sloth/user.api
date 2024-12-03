@@ -14,12 +14,12 @@ type User struct {
 
 func (u *User) Create(userDto dto.UserCreateRequest) (string, error) {
 	guid, err := u.userRepository.Check(userDto.Login, userDto.Email)
-	if err != nil {
-		return "", errors.New("internal error")
-	}
-
 	if guid != "" {
 		return "", errors.New("user already exists")
+	}
+
+	if err != nil && err.Error() != "sql: no rows in result set" {
+		return "", errors.New("internal error")
 	}
 
 	user := u.userFactory.EntityFromCreateDto(userDto)
@@ -37,3 +37,5 @@ func NewUser(userRepository *repository.UserRepository, userFactory *factory.Ent
 		userFactory:    userFactory,
 	}
 }
+
+// "invalid input syntax for type date: \"YYYY-MM-DD\""
